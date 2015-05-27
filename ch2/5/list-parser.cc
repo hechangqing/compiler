@@ -1,4 +1,7 @@
+#include <stdexcept>
 #include "list-parser.h"
+
+using std::logic_error;
 
 void ListParser::stat()
 {
@@ -96,6 +99,10 @@ void ListParser::match(int x)
 void ListParser::consume()
 {
     p_++;
+    if (!is_speculate() && p_ == lookahead_.size()) {
+        lookahead_.clear();
+        p_ = 0;
+    }
 }
 
 void ListParser::mark()
@@ -109,7 +116,7 @@ void ListParser::release()
     markers_.pop_back();
 }
 
-const Token &ListParser::LT(int i)
+Token ListParser::LT(int i)
 {
     sync(i);
     return lookahead_[p_+i-1];
@@ -123,7 +130,7 @@ int ListParser::LA(int i)
 void ListParser::sync(int i)
 {
     int n = 0;
-    if (p_+i-1 > lookahead_.size()-1) {
+    if (p_+i > lookahead_.size()) {
         n = p_ + i - lookahead_.size();
     }
     for (int i = 0; i < n; i++) {
@@ -133,15 +140,8 @@ void ListParser::sync(int i)
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
+bool ListParser::is_speculate()
+{
+    return !markers_.empty();
+}
 

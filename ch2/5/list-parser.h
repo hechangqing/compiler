@@ -16,6 +16,8 @@ private:
     void elements();
     void element();
 
+    bool is_speculate();
+
     void match(int x);
     void consume();
     void sync(int i);
@@ -23,7 +25,7 @@ private:
     void mark();
     void release();
 
-    const Token &LT(int i);
+    Token LT(int i);
     int LA(int i);
 private:
     ListLexer lexer_;

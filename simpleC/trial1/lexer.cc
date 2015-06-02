@@ -28,10 +28,6 @@ void Lexer::consume()
 
 int Lexer::next_token(Token *tok)
 {
-    if (c_ == EOF) {
-        *tok = Token(EOF, "EOF");
-        return EOF;
-    }
     while (isspace(c_)) {
         if (c_ == '\n') {
             line_num_++;
@@ -147,6 +143,10 @@ int Lexer::next_token(Token *tok)
             *tok = Token(kID, id);
             return kID;
         }
+    }
+    if (c_ == EOF) {
+        *tok = Token(EOF, "EOF");
+        return EOF;
     }
     string text;
     text = c_;

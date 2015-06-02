@@ -1,11 +1,15 @@
 #include "lexer.h"
+#include <algorithm>
 #include <cctype>
 
+using std::find;
 using std::string;
 using std::isspace;
 using std::isdigit;
 
 const int Lexer::EOF = -1;
+
+const string Lexer::types_[] = { "int", "float", "double" };
 
 void Lexer::consume()
 {
@@ -123,8 +127,26 @@ int Lexer::next_token(Token *tok)
             id += c_;
             consume();
         }
-        *tok = Token(kID, id);
-        return kID;
+        if (find(types_ + 0, types_ + sizeof(types_) / sizeof(*types_), id) 
+                != types_ + sizeof(types_) / sizeof(*types_)) {
+            *tok = Token(kBasic, id);
+            return kBasic;
+        } else if (id == "if") {
+            *tok = Token(kIf, id);
+            return kIf;
+        } else if (id == "else") {
+            *tok = Token(kElse, id);
+            return kElse;
+        } else if (id == "while") {
+            *tok = Token(kWhile, id);
+            return kWhile;
+        } else if (id == "break") {
+            *tok = Token(kBreak, id);
+            return kBreak;
+        } else {
+            *tok = Token(kID, id);
+            return kID;
+        }
     }
     string text;
     text = c_;
@@ -137,15 +159,20 @@ int Lexer::next_token(Token *tok)
 std::string Lexer::get_token_name(int i)
 {
     switch (i) {
-        case Lexer::kAnd           : return string("kAnd");
         case Lexer::kEOF           : return string("kEOF");
+        case Lexer::kAnd           : return string("kAnd");
         case Lexer::kOr            : return string("kOr");
         case Lexer::kEqual         : return string("kEqual");
         case Lexer::kNotEqual      : return string("kNotEqual");
-        case Lexer::kGreaterEqual  : return string("kGreaterEqual");
         case Lexer::kLessEqual     : return string("kLessEqual");
+        case Lexer::kGreaterEqual  : return string("kGreaterEqual");
         case Lexer::kID            : return string("kID");
         case Lexer::kNum           : return string("kNum");
+        case Lexer::kBasic         : return string("kBasic");
+        case Lexer::kIf            : return string("kIf");
+        case Lexer::kElse          : return string("kElse");
+        case Lexer::kWhile         : return string("kWhile");
+        case Lexer::kBreak         : return string("kBreak");
     }
     string name;
     name = static_cast<char>(i);

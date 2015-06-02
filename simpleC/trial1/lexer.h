@@ -1,6 +1,7 @@
 #ifndef _LEXER_H
 #define _LEXER_H
 
+#include <vector>
 #include <string>
 #include <iostream>
 
@@ -23,7 +24,12 @@ public:
            kLessEqual,
            kGreaterEqual,
            kID,
-           kNum };
+           kNum,
+           kBasic,
+           kIf,
+           kElse,
+           kWhile,
+           kBreak };
     static std::string get_token_name(int i);
 public:
     Lexer(std::istream &in) : in_(in), p_(0), c_(' '), line_num_(0) { consume(); }
@@ -32,6 +38,9 @@ public:
     const static int EOF;
 private:
     void consume();
+private:
+    const static std::string types_[3];
+
 private:
     std::istream &in_;
     char c_;

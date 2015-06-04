@@ -33,7 +33,9 @@ public:
            kIf,
            kElse,
            kWhile,
-           kBreak };
+           kBreak,
+           kTrue,
+           kFalse };
     static std::string get_token_name(int i);
     
     Lexer(std::istream &in) : in_(in), p_(0), c_(' '), line_num_(0) { 

@@ -17,6 +17,8 @@ while (htk == 0)
 *
 /
 +
+while (true == false)
+true false
 -
 @#
 

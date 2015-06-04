@@ -139,14 +139,20 @@ int Lexer::next_token(Token *tok)
         } else if (id == "break") {
             *tok = Token(kBreak, id);
             return kBreak;
+        } else if (id == "true") {
+            *tok = Token(kTrue, id);
+            return kTrue;
+        } else if (id == "false") {
+            *tok = Token(kFalse, id);
+            return kFalse;
         } else {
             *tok = Token(kID, id);
             return kID;
         }
     }
     if (c_ == EOF) {
-        *tok = Token(EOF, "EOF");
-        return EOF;
+        *tok = Token(kEOF, "EOF");
+        return kEOF;
     }
     string text;
     text = c_;
@@ -173,6 +179,8 @@ std::string Lexer::get_token_name(int i)
         case Lexer::kElse          : return string("kElse");
         case Lexer::kWhile         : return string("kWhile");
         case Lexer::kBreak         : return string("kBreak");
+        case Lexer::kTrue          : return string("kTrue");
+        case Lexer::kFalse         : return string("kFalse");
     }
     string name;
     name = static_cast<char>(i);

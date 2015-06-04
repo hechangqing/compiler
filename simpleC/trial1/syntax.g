@@ -1,6 +1,6 @@
 // this is the syntax of simpleC
-// because of using recusive down algorithm, the syntax does not include 
-// left-recusive syntax
+// because of using recursive down algorithm, the syntax does not include 
+// left-recursive syntax
 
 program     ::= block
 block       ::= '{' decls stmts '}'

@@ -9,6 +9,7 @@ test: $(testbin)
 	./lexer-test < test.c
 	./parser-test < test3.c
 	valgrind ./ast-test
+	valgrind ./parser-test < test3.c
 ast-test: ast-test.cc lexer.o ast.h
 	g++ $(GPPFLAG) $< lexer.o -o $@
 parser-test: parser-test.cc parser.o lexer.o

@@ -13,7 +13,12 @@ public:
     AST() { }
     AST(const Token &tok) : token_(tok) { }
     int get_node_type() { return token_.type; }
+    std::string get_node_text() { return token_.text; }
     void add_child(AST *p) { children_.push_back(ASTPtr(p)); }
+    size_t children_size() { return children_.size(); }
+    AST *get_child(size_t i) { 
+        return children_.at(i).get(); 
+    }
     std::string to_str(int indent = 0) { 
         return std::string(indent, ' ') + token_to_str(token_); 
     }

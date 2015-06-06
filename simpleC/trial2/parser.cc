@@ -244,12 +244,12 @@ AST *Parser::unary()
     AST *ret = NULL;
     switch (LA(1)) {
     case '!':
-        ret = new AST(Token(Lexer::vUnaryNot, "vUnaryNot"));
+        ret = new AST(Token(Lexer::vUnaryNot, "!"));
         match('!');
         ret->add_child(unary());
         break;
     case '-':
-        ret = new AST(Token(Lexer::vUnaryMinus, "vUnaryMinus"));
+        ret = new AST(Token(Lexer::vUnaryMinus, "-"));
         match('-');
         ret->add_child(unary());
         break;

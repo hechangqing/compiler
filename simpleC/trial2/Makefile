@@ -12,8 +12,10 @@ test: $(testbin)
 	valgrind ./parser-test < test3.c
 ast-test: ast-test.cc lexer.o ast.h
 	g++ $(GPPFLAG) $< lexer.o -o $@
-parser-test: parser-test.cc parser.o lexer.o
-	g++ $(GPPFLAG) $< lexer.o parser.o -o $@
+parser-test: parser-test.cc parser.o lexer.o print-visitor.o
+	g++ $(GPPFLAG) $< lexer.o parser.o print-visitor.o -o $@
+print-visitor.o: print-visitor.cc print-visitor.h ast.h
+	g++ $(GPPFLAG) -c $< -o $@
 parser.o: parser.cc parser.h
 	g++ $(GPPFLAG) -c $< -o $@
 lexer-test: lexer-test.cc lexer.o

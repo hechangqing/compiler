@@ -10,6 +10,7 @@
     }
     {
         int j;
+        int while;
         j = 3;
         if (j == 1) {
             j = j * j;

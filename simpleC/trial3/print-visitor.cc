@@ -154,6 +154,7 @@ void PrintVisitor::print_assign(AST *node, int indent)
         cout << ";";
 
         node->eval_type_ = node->get_child(0)->eval_type_;
+        cout << "type" << node->eval_type_;
     }
 }
 
@@ -203,6 +204,7 @@ void PrintVisitor::print_id(AST *node)
             throw undefine_symbol_error("undefine symbol" + node->get_node_text());
         }
         node->eval_type_ = sym.type;
+        cout << "type" << node->eval_type_;
     }
 }
 
@@ -216,6 +218,7 @@ void PrintVisitor::print_boolean(AST *node)
         cout << ")";
         
         node->eval_type_ = Symbol::relop(node->get_child(0), node->get_child(1));
+        cout << "type" << node->eval_type_;
     }
 }
 
@@ -229,6 +232,7 @@ void PrintVisitor::print_equality(AST *node)
         cout << ")";
         
         node->eval_type_ = Symbol::eqop(node->get_child(0), node->get_child(1));
+        cout << "type" << node->eval_type_;
     }
 }
 
@@ -240,6 +244,7 @@ void PrintVisitor::print_rel(AST *node)
         print(node->get_child(1));
         
         node->eval_type_ = Symbol::relop(node->get_child(0), node->get_child(1));
+        cout << "type" << node->eval_type_;
     }
 }
 
@@ -265,6 +270,7 @@ void PrintVisitor::PrintVisitor::print_arith(AST *node)
         }
         
         node->eval_type_ = Symbol::bop(node->get_child(0), node->get_child(1));
+        cout << "type" << node->eval_type_;
     }
 }
 
@@ -275,6 +281,7 @@ void PrintVisitor::print_unary(AST *node)
         print(node->get_child(0));
 
         node->eval_type_ = node->get_child(0)->eval_type_;
+        cout << "type" << node->eval_type_;
     }
 }
 
@@ -303,6 +310,7 @@ void PrintVisitor::print_text(AST *node)
         default:
             throw logic_error("PrintVisitor::print_text(): unkown type");
         }
+        cout << "type" << node->eval_type_;
     }
 }
 

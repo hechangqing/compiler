@@ -11,7 +11,7 @@
     }
     {
         int j;
-        int i;
+        int k;
         j = 3;
         if (j == 1) {
             j = j * j;
@@ -20,5 +20,9 @@
                 hehehe = hehehe;
             } else kdskf = kdskf;
         }
+    }
+    {
+        float k;
+        float if;
     }
 }

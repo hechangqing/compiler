@@ -22,21 +22,21 @@ public:
     void program();
     AST::ASTPtr get_ast();
 private:
-    AST *block();
-    AST *decls();
-    AST *stmts();
-    AST *decl();
-    AST *stmt();
-    AST *type();
-    AST *loc();
-    AST *boolean();
-    AST *join();
-    AST *equality();
-    AST *rel();
-    AST *expr();
-    AST *term();
-    AST *unary();
-    AST *factor();
+    AST::ASTPtr block();
+    AST::ASTPtr decls();
+    AST::ASTPtr stmts();
+    AST::ASTPtr decl();
+    AST::ASTPtr stmt();
+    AST::ASTPtr type();
+    AST::ASTPtr loc();
+    AST::ASTPtr boolean();
+    AST::ASTPtr join();
+    AST::ASTPtr equality();
+    AST::ASTPtr rel();
+    AST::ASTPtr expr();
+    AST::ASTPtr term();
+    AST::ASTPtr unary();
+    AST::ASTPtr factor();
     
     void match(int x);
     void consume();

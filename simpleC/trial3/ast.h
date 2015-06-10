@@ -15,6 +15,7 @@ public:
     int get_node_type() { return token_.type; }
     std::string get_node_text() { return token_.text; }
     void add_child(AST *p) { children_.push_back(ASTPtr(p)); }
+    void add_child(const ASTPtr &p) { children_.push_back(p); }
     size_t children_size() { return children_.size(); }
     AST *get_child(size_t i) { 
         return children_.at(i).get(); 

@@ -13,7 +13,7 @@ const int Parser::stmts_first_set_[] = {
 
 void Parser::program()
 {
-    ast_ = ASTPtr(block());
+    ast_ = block();
 }
 
 ASTPtr Parser::get_ast()
@@ -21,12 +21,12 @@ ASTPtr Parser::get_ast()
     return ast_;
 }
 
-AST *Parser::block()
+ASTPtr Parser::block()
 {
     const int *stmts_end = stmts_first_set_ + 
         sizeof(stmts_first_set_) / sizeof(stmts_first_set_[0]);
     
-    AST *declations = NULL, *statements = NULL;
+    ASTPtr declations, statements;
     match('{');
     if (LA(1) == Lexer::kBasic) {
         declations = decls();
@@ -35,24 +35,24 @@ AST *Parser::block()
         statements = stmts();
     }
     match('}');
-    AST *ret = new AST(Token(Lexer::vBlock, "vBlock"));
+    ASTPtr ret(new AST(Token(Lexer::vBlock, "vBlock")));
     ret->add_child(declations);
     ret->add_child(statements);
     return ret;
 }
 
-AST *Parser::decls()
+ASTPtr Parser::decls()
 {
-    AST *declations = new AST(Token(Lexer::vDecls, "vDecls"));
+    ASTPtr declations(new AST(Token(Lexer::vDecls, "vDecls")));
     while (LA(1) == Lexer::kBasic) {
         declations->add_child(decl());
     }
     return declations;
 }
 
-AST *Parser::decl()
+ASTPtr Parser::decl()
 {
-    AST *ret = new AST(Token(Lexer::vDecl, "vDecl"));
+    ASTPtr ret(new AST(Token(Lexer::vDecl, "vDecl")));
     ret->add_child(type());
     ret->add_child(new AST(LT(1)));
     match(Lexer::kID);
@@ -60,16 +60,16 @@ AST *Parser::decl()
     return ret;
 }
 
-AST *Parser::type()
+ASTPtr Parser::type()
 {
-    AST *ret = new AST(LT(1));
+    ASTPtr ret(new AST(LT(1)));
     match(Lexer::kBasic);
     return ret;
 }
 
-AST *Parser::stmts()
+ASTPtr Parser::stmts()
 {
-    AST *ret = new AST(Token(Lexer::vStmts, "vStmts"));
+    ASTPtr ret(new AST(Token(Lexer::vStmts, "vStmts")));
     const int *stmts_end = stmts_first_set_ + 
         sizeof(stmts_first_set_) / sizeof(stmts_first_set_[0]);
     while (find(stmts_first_set_, stmts_end, LA(1)) 
@@ -79,19 +79,19 @@ AST *Parser::stmts()
     return ret;
 }
 
-AST *Parser::stmt()
+ASTPtr Parser::stmt()
 {
-    AST *ret = NULL;
+    ASTPtr ret;
     switch (LA(1)) {
     case Lexer::kID: 
-        ret = new AST(Token('=', "=")); 
+        ret.reset(new AST(Token('=', "="))); 
         ret->add_child(loc()); 
         match('='); 
         ret->add_child(boolean()); 
         match(';');
         return ret;
     case Lexer::kIf:
-        ret = new AST(LT(1));
+        ret.reset(new AST(LT(1)));
         match(Lexer::kIf);
         match('(');
         ret->add_child(boolean());
@@ -101,7 +101,7 @@ AST *Parser::stmt()
         ret->add_child(stmt());
         return ret;
     case Lexer::kWhile:
-        ret = new AST(LT(1));
+        ret.reset(new AST(LT(1)));
         match(Lexer::kWhile);
         match('(');
         ret->add_child(boolean());
@@ -109,7 +109,7 @@ AST *Parser::stmt()
         ret->add_child(stmt());
         return ret;
     case Lexer::kBreak:
-        ret = new AST(LT(1));
+        ret.reset(new AST(LT(1)));
         match(Lexer::kBreak);
         match(';');
         return ret;
@@ -125,19 +125,19 @@ AST *Parser::stmt()
     return ret;
 }
 
-AST *Parser::loc()
+ASTPtr Parser::loc()
 {
-    AST *ret = new AST(LT(1));
+    ASTPtr ret(new AST(LT(1)));
     match(Lexer::kID);
     return ret;
 }
 
-AST *Parser::boolean()
+ASTPtr Parser::boolean()
 {
-    AST *ret = join();
+    ASTPtr ret(join());
     while (LA(1) == Lexer::kOr) {
-        AST *left = ret;
-        ret = new AST(LT(1));
+        ASTPtr left = ret;
+        ret.reset(new AST(LT(1)));
         ret->add_child(left);
         match(Lexer::kOr);
         ret->add_child(join());
@@ -145,12 +145,12 @@ AST *Parser::boolean()
     return ret;
 }
 
-AST *Parser::join()
+ASTPtr Parser::join()
 {
-    AST *ret = equality();
+    ASTPtr ret(equality());
     while (LA(1) == Lexer::kAnd) {
-        AST *left = ret;
-        ret = new AST(LT(1));
+        ASTPtr left = ret;
+        ret.reset(new AST(LT(1)));
         ret->add_child(left);
         match(Lexer::kAnd);
         ret->add_child(equality());
@@ -158,12 +158,12 @@ AST *Parser::join()
     return ret;
 }
 
-AST *Parser::equality()
+ASTPtr Parser::equality()
 {
-    AST *ret = rel();
+    ASTPtr ret(rel());
     while (LA(1) == Lexer::kEqual || LA(1) == Lexer::kNotEqual) {
-        AST *left = ret;
-        ret = new AST(LT(1));
+        ASTPtr left = ret;
+        ret.reset(new AST(LT(1)));
         ret->add_child(left);
         if (LA(1) == Lexer::kEqual) {
             match(Lexer::kEqual);
@@ -175,14 +175,14 @@ AST *Parser::equality()
     return ret;
 }
 
-AST *Parser::rel()
+ASTPtr Parser::rel()
 {
-    AST *ret = expr();
+    ASTPtr ret(expr());
     if (LA(1) == '<' || LA(1) == '>' ||
         LA(1) == Lexer::kLessEqual || 
         LA(1) == Lexer::kGreaterEqual) {
-        AST *left = ret;
-        ret = new AST(LT(1));
+        ASTPtr left = ret;
+        ret.reset(new AST(LT(1)));
         ret->add_child(left);
         switch (LA(1)) {
         case '<':
@@ -205,12 +205,12 @@ AST *Parser::rel()
     return ret;
 }
 
-AST *Parser::expr()
+ASTPtr Parser::expr()
 {
-    AST *ret = term();
+    ASTPtr ret(term());
     while (LA(1) == '+' || LA(1) == '-') {
-        AST *left = ret;
-        ret = new AST(LT(1));
+        ASTPtr left = ret;
+        ret.reset(new AST(LT(1)));
         ret->add_child(left);
         if (LA(1) == '+') {
             match('+');
@@ -222,12 +222,12 @@ AST *Parser::expr()
     return ret;
 }
 
-AST *Parser::term()
+ASTPtr Parser::term()
 {
-    AST *ret = unary();
+    ASTPtr ret(unary());
     while (LA(1) == '*' || LA(1) == '/') {
-        AST *left = ret;
-        ret = new AST(LT(1));
+        ASTPtr left = ret;
+        ret.reset(new AST(LT(1)));
         ret->add_child(left);
         if (LA(1) == '*') {
             match('*');
@@ -239,17 +239,17 @@ AST *Parser::term()
     return ret;
 }
 
-AST *Parser::unary()
+ASTPtr Parser::unary()
 {
-    AST *ret = NULL;
+    ASTPtr ret;
     switch (LA(1)) {
     case '!':
-        ret = new AST(Token(Lexer::vUnaryNot, "!"));
+        ret.reset(new AST(Token(Lexer::vUnaryNot, "!")));
         match('!');
         ret->add_child(unary());
         break;
     case '-':
-        ret = new AST(Token(Lexer::vUnaryMinus, "-"));
+        ret.reset(new AST(Token(Lexer::vUnaryMinus, "-")));
         match('-');
         ret->add_child(unary());
         break;
@@ -266,9 +266,9 @@ AST *Parser::unary()
     return ret;
 }
 
-AST *Parser::factor()
+ASTPtr Parser::factor()
 {
-    AST *ret = NULL;
+    ASTPtr ret;
     switch (LA(1)) {
     case '(':
         match('(');
@@ -279,15 +279,15 @@ AST *Parser::factor()
         ret = loc();
         break;
     case Lexer::kNum:
-        ret = new AST(LT(1));
+        ret.reset(new AST(LT(1)));
         match(Lexer::kNum);
         break;
     case Lexer::kTrue:
-        ret = new AST(LT(1));
+        ret.reset(new AST(LT(1)));
         match(Lexer::kTrue);
         break;
     case Lexer::kFalse:
-        ret = new AST(LT(1));
+        ret.reset(new AST(LT(1)));
         match(Lexer::kFalse);
         break;
     default:

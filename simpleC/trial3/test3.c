@@ -17,13 +17,14 @@
             j = j * j;
         } else {
             if (true == false) {
-                hehehe = hehehe;
-            } else kdskf = kdskf;
+                k = j;
+            } else k = k;
         }
     }
     {
         float k;
         float l;
+        k = k * l;
     }
     e = i + j;
 }

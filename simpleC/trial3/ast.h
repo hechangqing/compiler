@@ -12,8 +12,8 @@ class AST {
 public:
     typedef std::shared_ptr<AST> ASTPtr;
 public:
-    AST() { }
-    AST(const Token &tok) : token_(tok) { }
+    AST() : eval_type_(Symbol::kUnknown) { }
+    AST(const Token &tok) : token_(tok), eval_type_(Symbol::kUnknown) { }
     int get_node_type() { return token_.type; }
     std::string get_node_text() { return token_.text; }
     void add_child(AST *p) { children_.push_back(ASTPtr(p)); }

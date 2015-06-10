@@ -14,9 +14,9 @@ symbol-test: symbol-test.cc scope.o
 	g++ $(GPPFLAG) $< scope.o -o $@
 ast-test: ast-test.cc lexer.o ast.h
 	g++ $(GPPFLAG) $< lexer.o -o $@
-parser-test: parser-test.cc parser.o lexer.o print-visitor.o scope.o
-	g++ $(GPPFLAG) $< lexer.o parser.o print-visitor.o scope.o -o $@
-symbol.o: symbol.h
+parser-test: parser-test.cc parser.o lexer.o print-visitor.o scope.o symbol.o
+	g++ $(GPPFLAG) $< lexer.o parser.o print-visitor.o scope.o symbol.o -o $@
+symbol.o: symbol.cc symbol.h
 	g++ $(GPPFLAG) -c $< -o $@
 scope.o: scope.cc scope.h symbol.h
 	g++ $(GPPFLAG) -c $< -o $@

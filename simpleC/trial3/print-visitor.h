@@ -3,6 +3,13 @@
 
 #include "ast.h"
 #include "scope.h"
+#include <stdexcept>
+
+class undefine_symbol_error : public std::logic_error {
+public:
+    undefine_symbol_error(const std::string &s) 
+        : std::logic_error(s) { }
+};
 
 class PrintVisitor {
 public:

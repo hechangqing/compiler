@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include <algorithm>
 #include "print-visitor.h"
 #include "lexer.h"
 #include "scope.h"
@@ -9,6 +10,7 @@ using std::cout;
 using std::endl;
 using std::string;
 using std::logic_error;
+using std::find;
 
 typedef Scope::ScopePtr ScopePtr;
 
@@ -150,6 +152,8 @@ void PrintVisitor::print_assign(AST *node, int indent)
         cout << " = ";
         print(node->get_child(1));
         cout << ";";
+
+        node->eval_type_ = node->get_child(0)->eval_type_;
     }
 }
 
@@ -194,6 +198,11 @@ void PrintVisitor::print_id(AST *node)
         cout << "resolve: " 
              << (current_scope_->resolve(node->get_node_text(), &sym) 
                     ? "success" + sym.to_str() : "fail");
+
+        if (!current_scope_->resolve(node->get_node_text(), &sym)) {
+            throw undefine_symbol_error("undefine symbol" + node->get_node_text());
+        }
+        node->eval_type_ = sym.type;
     }
 }
 
@@ -205,6 +214,8 @@ void PrintVisitor::print_boolean(AST *node)
         cout << ") " << node->get_node_text() << " (";
         print(node->get_child(1));
         cout << ")";
+        
+        node->eval_type_ = Symbol::relop(node->get_child(0), node->get_child(1));
     }
 }
 
@@ -216,6 +227,8 @@ void PrintVisitor::print_equality(AST *node)
         cout << ") " << node->get_node_text() << " (";
         print(node->get_child(1));
         cout << ")";
+        
+        node->eval_type_ = Symbol::eqop(node->get_child(0), node->get_child(1));
     }
 }
 
@@ -225,6 +238,8 @@ void PrintVisitor::print_rel(AST *node)
         print(node->get_child(0));
         cout << " " << node->get_node_text() << " ";
         print(node->get_child(1));
+        
+        node->eval_type_ = Symbol::relop(node->get_child(0), node->get_child(1));
     }
 }
 
@@ -248,6 +263,8 @@ void PrintVisitor::PrintVisitor::print_arith(AST *node)
             print(node->get_child(1));
             cout << ")";
         }
+        
+        node->eval_type_ = Symbol::bop(node->get_child(0), node->get_child(1));
     }
 }
 
@@ -256,13 +273,37 @@ void PrintVisitor::print_unary(AST *node)
     if (node) {
         cout << node->get_node_text();
         print(node->get_child(0));
+
+        node->eval_type_ = node->get_child(0)->eval_type_;
     }
+}
+
+static bool is_float(const std::string &s)
+{
+    return find(s.begin(), s.end(), '.') != s.end();
 }
 
 void PrintVisitor::print_text(AST *node)
 {
     if (node) {
         cout << node->get_node_text();
+
+        switch (node->get_node_type()) {
+        case Lexer::kTrue:
+        case Lexer::kFalse:
+            node->eval_type_ = Symbol::kBoolean;
+            break;
+        case Lexer::kNum:
+            if (is_float(node->get_node_text())) {
+                node->eval_type_ = Symbol::kFloat;
+            } else {
+                node->eval_type_ = Symbol::kInt;
+            }
+            break;
+        default:
+            throw logic_error("PrintVisitor::print_text(): unkown type");
+        }
     }
 }
+
 

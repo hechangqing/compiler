@@ -23,6 +23,7 @@
     }
     {
         float k;
-        float if;
+        float l;
     }
+    e = i + j;
 }

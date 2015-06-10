@@ -2,6 +2,8 @@
 #define _AST_H
 
 #include "lexer.h"
+#include "symbol.h"
+#include "scope.h"
 #include <vector>
 #include <memory>
 #include <sstream>
@@ -38,6 +40,10 @@ public:
         ss << std::string(indent, ' ') << ")";
         return ss.str();
     }
+public:
+    Symbol::Type eval_type_;
+    Symbol symbol_;
+    Scope::ScopePtr scope_;
 private:
     Token token_;
     std::vector<ASTPtr> children_;

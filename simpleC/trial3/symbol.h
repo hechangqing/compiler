@@ -4,10 +4,14 @@
 #include <stdexcept>
 #include <string>
 
+class AST;
+
 class Symbol {
 public:
-    typedef enum { kUnknown, kInt, kFloat } Type;
-    Symbol(Type init_type = kUnknown) : type(init_type) { }
+    typedef enum { kUnknown, kInt, kFloat, kBoolean } Type;
+public:
+    Symbol(Type init_type = kUnknown) 
+        : type(init_type) { }
     Symbol(const std::string &init_name, const std::string &init_type = "")
         : name(init_name), type(str_to_type(init_type)) { }
     Symbol(const std::string &init_name, Type init_type = kUnknown)
@@ -31,6 +35,10 @@ public:
         return "";
     }
     std::string to_str() const { return "<" + name + ", " + get_type(type) + ">"; }
+public:
+    static Type bop(AST *a, AST *b);
+    static Type relop(AST *a, AST *b);
+    static Type eqop(AST *a, AST *b);
 public:
     std::string name;
     Type type;

@@ -16,6 +16,8 @@ ast-test: ast-test.cc lexer.o ast.h
 	g++ $(GPPFLAG) $< lexer.o -o $@
 parser-test: parser-test.cc parser.o lexer.o print-visitor.o scope.o
 	g++ $(GPPFLAG) $< lexer.o parser.o print-visitor.o scope.o -o $@
+symbol.o: symbol.h
+	g++ $(GPPFLAG) -c $< -o $@
 scope.o: scope.cc scope.h symbol.h
 	g++ $(GPPFLAG) -c $< -o $@
 print-visitor.o: print-visitor.cc print-visitor.h ast.h

@@ -109,17 +109,25 @@ void PrintVisitor::print_decls(AST *node, int indent)
 void PrintVisitor::print_decl(AST *node, int indent)
 {
     if (node) {
+        AST *type = node->get_child(0);
+        AST *id = node->get_child(1);
+        
         cout << string(indent, ' ');
-        cout << node->get_child(0)->get_node_text();
+        cout << type->get_node_text();
         cout << " ";
-        cout << node->get_child(1)->get_node_text();
+        cout << id->get_node_text();
         cout << ";";
 
-        cout << "// define " + node->get_child(1)->get_node_text()
-            + "; type " + node->get_child(0)->get_node_text();
-        Symbol sym(node->get_child(1)->get_node_text(), 
-                node->get_child(0)->get_node_text());
+        cout << "// define " + id->get_node_text()
+            + "; type " + type->get_node_text();
+        // define the symbol in current scope
+        Symbol sym(id->get_node_text(), 
+                type->get_node_text());
         current_scope_->define(sym);
+        // the child AST node is identifier
+        // fill the data members(symbol_, scope_) of the child AST node
+        id->symbol_ = sym;
+        id->scope_ = current_scope_;
     }
 }
 
@@ -183,7 +191,9 @@ void PrintVisitor::print_id(AST *node)
 
         cout << " /* ref:" + node->get_node_text() + " */ ";
         Symbol sym;
-        cout << current_scope_->resolve(node->get_node_text(), &sym) << endl;
+        cout << "resolve: " 
+             << (current_scope_->resolve(node->get_node_text(), &sym) 
+                    ? "success" + sym.to_str() : "fail");
     }
 }
 

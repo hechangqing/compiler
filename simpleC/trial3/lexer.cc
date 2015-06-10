@@ -1,11 +1,13 @@
 #include "lexer.h"
 #include <algorithm>
 #include <cctype>
+#include <sstream>
 
 using std::find;
 using std::string;
 using std::isspace;
 using std::isdigit;
+using std::stringstream;
 
 const string Lexer::types_[] = { "int", "float", "double" };
 
@@ -37,60 +39,60 @@ int Lexer::next_token(Token *tok)
             consume();
             if (c_ == '&') {
                 consume();
-                *tok = Token(kAnd, "&&"); 
+                *tok = Token(kAnd, "&&", line_num_); 
                 return kAnd;
             } else {
-                *tok = Token('&', "&");
+                *tok = Token('&', "&", line_num_);
                 return '&';
             }
         case '|':
             consume();
             if (c_ == '|') {
                 consume();
-                *tok = Token(kOr, "||");
+                *tok = Token(kOr, "||", line_num_);
                 return kOr;
             } else {
-                *tok = Token('|', "|");
+                *tok = Token('|', "|", line_num_);
                 return '|';
             }
         case '=':
             consume();
             if (c_ == '=') {
                 consume();
-                *tok = Token(kEqual, "==");
+                *tok = Token(kEqual, "==", line_num_);
                 return kEqual;
             } else {
-                *tok = Token('=', "=");
+                *tok = Token('=', "=", line_num_);
                 return '=';
             }
         case '!':
             consume();
             if (c_ == '=') {
                 consume();
-                *tok = Token(kNotEqual, "!=");
+                *tok = Token(kNotEqual, "!=", line_num_);
                 return kNotEqual;
             } else {
-                *tok = Token('!', "!");
+                *tok = Token('!', "!", line_num_);
                 return '!';
             }
         case '<':
             consume();
             if (c_ == '=') {
                 consume();
-                *tok = Token(kLessEqual, "<=");
+                *tok = Token(kLessEqual, "<=", line_num_);
                 return kLessEqual;
             } else {
-                *tok = Token('<', "<");
+                *tok = Token('<', "<", line_num_);
                 return '<';
             }
         case '>':
             consume();
             if (c_ == '=') {
                 consume();
-                *tok = Token(kGreaterEqual, ">=");
+                *tok = Token(kGreaterEqual, ">=", line_num_);
                 return kGreaterEqual;
             } else {
-                *tok = Token('>', ">");
+                *tok = Token('>', ">", line_num_);
                 return '>';
             }
     }
@@ -108,7 +110,7 @@ int Lexer::next_token(Token *tok)
             num += c_;
             consume();
         }
-        *tok = Token(kNum, num);
+        *tok = Token(kNum, num, line_num_);
         return kNum;
     }
     if (isalpha(c_) || c_ == '_') {
@@ -123,39 +125,39 @@ int Lexer::next_token(Token *tok)
         }
         if (find(types_ + 0, types_ + sizeof(types_) / sizeof(*types_), id) 
                 != types_ + sizeof(types_) / sizeof(*types_)) {
-            *tok = Token(kBasic, id);
+            *tok = Token(kBasic, id, line_num_);
             return kBasic;
         } else if (id == "if") {
-            *tok = Token(kIf, id);
+            *tok = Token(kIf, id, line_num_);
             return kIf;
         } else if (id == "else") {
-            *tok = Token(kElse, id);
+            *tok = Token(kElse, id, line_num_);
             return kElse;
         } else if (id == "while") {
-            *tok = Token(kWhile, id);
+            *tok = Token(kWhile, id, line_num_);
             return kWhile;
         } else if (id == "break") {
-            *tok = Token(kBreak, id);
+            *tok = Token(kBreak, id, line_num_);
             return kBreak;
         } else if (id == "true") {
-            *tok = Token(kTrue, id);
+            *tok = Token(kTrue, id, line_num_);
             return kTrue;
         } else if (id == "false") {
-            *tok = Token(kFalse, id);
+            *tok = Token(kFalse, id, line_num_);
             return kFalse;
         } else {
-            *tok = Token(kID, id);
+            *tok = Token(kID, id, line_num_);
             return kID;
         }
     }
     if (c_ == kEOF) {
-        *tok = Token(kEOF, "EOF");
+        *tok = Token(kEOF, "EOF", line_num_);
         return kEOF;
     }
     string text;
     text = c_;
     int type = c_;
-    *tok = Token(type, text);
+    *tok = Token(type, text, line_num_);
     consume();
     return type;
 }
@@ -193,9 +195,12 @@ std::string Lexer::get_token_name(int i)
 
 std::string token_to_str(const Token &tok)
 {
-    return "<\"" + tok.text + "\", " 
+    stringstream ss;
+    ss <<  "<\"" + tok.text + "\", " 
            + Lexer::get_token_name(tok.type)
-           + ">";
+           + ", line "
+       <<  tok.line << ">";
+    return ss.str();
 }
 
 

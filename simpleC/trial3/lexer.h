@@ -6,10 +6,12 @@
 
 class Token {
 public:
-    Token(int t = -1, 
-          const std::string &str = "!!Unknown") : type(t), text(str) {}
+    Token(int t = -1, const std::string &str = "!!Unknown", int ln = 0)
+        : type(t), text(str), line(ln) { }
+
     int         type;
     std::string text;
+    int         line;
 };
 
 std::string token_to_str(const Token &tok);
@@ -58,7 +60,7 @@ private:
     std::string line_;      // lookahead line
     size_t line_num_;       // current line number in instream
     size_t p_;              // the index of string(line_) to read
-    const static std::string types_[3]; // data types of target language
+    const static std::string types_[]; // data types of target language
 };
 
 #endif // _LEXER_H

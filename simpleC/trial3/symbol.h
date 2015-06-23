@@ -3,6 +3,7 @@
 
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 class AST;
 
@@ -13,7 +14,8 @@ public:
                    kFloat   = 2, 
                    kVoid    = 3,
                    kBoolean = 0} Type;
-    static const Type arith_result_type[][4];
+    static const std::vector<std::vector<Type> > arith_result_type;
+    static Type get_result_type(const std::vector<std::vector<Type> > &type_table, AST *a, AST *b);
 public:
     Symbol(Type init_type = kUnknown) 
         : type(init_type) { }

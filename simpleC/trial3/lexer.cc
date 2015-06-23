@@ -9,7 +9,7 @@ using std::isspace;
 using std::isdigit;
 using std::stringstream;
 
-const string Lexer::types_[] = { "int", "float", "double" };
+const string Lexer::types_[] = { "int", "float", "bool" };
 
 void Lexer::consume()
 {

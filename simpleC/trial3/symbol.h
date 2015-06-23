@@ -8,7 +8,12 @@ class AST;
 
 class Symbol {
 public:
-    typedef enum { kUnknown, kInt, kFloat, kBoolean } Type;
+    typedef enum { kUnknown = 10, 
+                   kInt     = 1, 
+                   kFloat   = 2, 
+                   kVoid    = 3,
+                   kBoolean = 0} Type;
+    static const Type arith_result_type[][4];
 public:
     Symbol(Type init_type = kUnknown) 
         : type(init_type) { }
@@ -21,15 +26,18 @@ public:
             return kInt;
         } else if (x == "float") {
             return kFloat;
+        } else if (x == "bool") {
+            return kBoolean;
         } else {
             return kUnknown;
         }
     }
-    std::string get_type(Type x) const {
+    static std::string get_type(Type x) {
         switch (x) {
         case kUnknown: return "unknown";
         case kInt:     return "int";
         case kFloat:   return "float";
+        case kBoolean: return "boolean";
         default:       throw std::logic_error("Symbol::get_type(): unknown type");
         }
         return "";

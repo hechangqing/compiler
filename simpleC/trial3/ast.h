@@ -23,7 +23,8 @@ public:
         return children_.at(i).get(); 
     }
     std::string to_str(int indent = 0) { 
-        return std::string(indent, ' ') + token_to_str(token_); 
+        return std::string(indent, ' ') + token_to_str(token_) 
+            + " eval type: " + Symbol::get_type(eval_type_); 
     }
     std::string to_str_tree(int indent = 0) {
         if (children_.empty()) {

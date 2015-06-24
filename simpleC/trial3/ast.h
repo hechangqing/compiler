@@ -12,8 +12,8 @@ class AST {
 public:
     typedef std::shared_ptr<AST> ASTPtr;
 public:
-    AST() : eval_type_(Symbol::kUnknown) { }
-    AST(const Token &tok) : token_(tok), eval_type_(Symbol::kUnknown) { }
+    AST() : eval_type_(Symbol::kUnknown), promote_type_(Symbol::kUnknown) { }
+    AST(const Token &tok) : token_(tok), eval_type_(Symbol::kUnknown), promote_type_(Symbol::kUnknown) { }
     int get_node_type() { return token_.type; }
     std::string get_node_text() { return token_.text; }
     void add_child(AST *p) { children_.push_back(ASTPtr(p)); }
@@ -24,7 +24,8 @@ public:
     }
     std::string to_str(int indent = 0) { 
         return std::string(indent, ' ') + token_to_str(token_) 
-            + " eval type: " + Symbol::get_type(eval_type_); 
+            + " eval type: " + Symbol::get_type(eval_type_)
+            + " promote type: " + Symbol::get_type(promote_type_); 
     }
     std::string to_str_tree(int indent = 0) {
         if (children_.empty()) {
@@ -43,6 +44,7 @@ public:
     }
 public:
     Symbol::Type eval_type_;
+    Symbol::Type promote_type_;
     Symbol symbol_;
     Scope::ScopePtr scope_;
 private:

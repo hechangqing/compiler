@@ -9,12 +9,18 @@ class AST;
 
 class Symbol {
 public:
-    typedef enum { kUnknown = 10, 
+    typedef enum { kUnknown = 10,
+                   kNull    = 11,
                    kInt     = 1, 
                    kFloat   = 2, 
                    kVoid    = 3,
                    kBoolean = 0} Type;
     static const std::vector<std::vector<Type> > arith_result_type;
+    static const std::vector<std::vector<Type> > relation_result_type;
+    static const std::vector<std::vector<Type> > equal_result_type;
+    static const std::vector<std::vector<Type> > assign_result_type;
+    static const std::vector<std::vector<Type> > promote_from_to;
+    
     static Type get_result_type(const std::vector<std::vector<Type> > &type_table, AST *a, AST *b);
 public:
     Symbol(Type init_type = kUnknown) 
@@ -37,6 +43,8 @@ public:
     static std::string get_type(Type x) {
         switch (x) {
         case kUnknown: return "unknown";
+        case kNull:    return "null";
+        case kVoid:    return "void";
         case kInt:     return "int";
         case kFloat:   return "float";
         case kBoolean: return "boolean";
@@ -49,6 +57,7 @@ public:
     static Type bop(AST *a, AST *b);
     static Type relop(AST *a, AST *b);
     static Type eqop(AST *a, AST *b);
+    static Type assignop(AST *a, AST *b);
 public:
     std::string name;
     Type type;

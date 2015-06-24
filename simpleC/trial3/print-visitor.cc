@@ -153,7 +153,8 @@ void PrintVisitor::print_assign(AST *node, int indent)
         print(node->get_child(1));
         cout << ";";
 
-        node->eval_type_ = node->get_child(0)->eval_type_;
+        node->eval_type_ = Symbol::assignop(node->get_child(0), node->get_child(1));
+        node->promote_type_ = Symbol::kNull;
         cout << "type" << node->eval_type_;
     }
 }
@@ -218,6 +219,7 @@ void PrintVisitor::print_boolean(AST *node)
         cout << ")";
         
         node->eval_type_ = Symbol::relop(node->get_child(0), node->get_child(1));
+        node->promote_type_ = Symbol::kNull;
         cout << "type" << node->eval_type_;
     }
 }
@@ -232,6 +234,7 @@ void PrintVisitor::print_equality(AST *node)
         cout << ")";
         
         node->eval_type_ = Symbol::eqop(node->get_child(0), node->get_child(1));
+        node->promote_type_ = Symbol::kNull;
         cout << "type" << node->eval_type_;
     }
 }
@@ -244,6 +247,7 @@ void PrintVisitor::print_rel(AST *node)
         print(node->get_child(1));
         
         node->eval_type_ = Symbol::relop(node->get_child(0), node->get_child(1));
+        node->promote_type_ = Symbol::kNull;
         cout << "type" << node->eval_type_;
     }
 }

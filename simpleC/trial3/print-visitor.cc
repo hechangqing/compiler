@@ -5,6 +5,7 @@
 #include "print-visitor.h"
 #include "lexer.h"
 #include "scope.h"
+#include "utils.h"
 
 using std::cout;
 using std::endl;
@@ -153,7 +154,7 @@ void PrintVisitor::print_assign(AST *node, int indent)
         print(node->get_child(1));
         cout << ";";
 
-        node->eval_type_ = Symbol::assignop(node->get_child(0), node->get_child(1));
+        node->eval_type_ = Symbol::assignop(node->get_child(0), node->get_child(1), &listener_);
         node->promote_type_ = Symbol::kNull;
         cout << "type" << node->eval_type_;
     }
@@ -168,6 +169,14 @@ void PrintVisitor::print_if(AST *node, int indent)
         print(node->get_child(1), indent);
         cout << "\n" << string(indent, ' ') << "else ";
         print(node->get_child(2), indent);
+
+        AST *cond = node->get_child(0);
+        if (cond->eval_type_ != Symbol::kBoolean) {
+            listener_.error("if condition " +
+                    cond->get_node_text() + 
+                    " must have boolean type near line " +
+                    str(cond->get_node_line()));
+        }
     }
 }
 
@@ -205,7 +214,9 @@ void PrintVisitor::print_id(AST *node)
             throw undefine_symbol_error("undefine symbol" + node->get_node_text());
         }
         node->eval_type_ = sym.type;
-        cout << "type" << node->eval_type_;
+        node->symbol_ = sym;
+        node->scope_ = current_scope_;
+        cout << "type" << Symbol::get_type(node->eval_type_);
     }
 }
 
@@ -218,7 +229,7 @@ void PrintVisitor::print_boolean(AST *node)
         print(node->get_child(1));
         cout << ")";
         
-        node->eval_type_ = Symbol::relop(node->get_child(0), node->get_child(1));
+        node->eval_type_ = Symbol::logicop(node->get_child(0), node->get_child(1), &listener_);
         node->promote_type_ = Symbol::kNull;
         cout << "type" << node->eval_type_;
     }
@@ -233,7 +244,7 @@ void PrintVisitor::print_equality(AST *node)
         print(node->get_child(1));
         cout << ")";
         
-        node->eval_type_ = Symbol::eqop(node->get_child(0), node->get_child(1));
+        node->eval_type_ = Symbol::eqop(node->get_child(0), node->get_child(1), &listener_);
         node->promote_type_ = Symbol::kNull;
         cout << "type" << node->eval_type_;
     }
@@ -246,7 +257,7 @@ void PrintVisitor::print_rel(AST *node)
         cout << " " << node->get_node_text() << " ";
         print(node->get_child(1));
         
-        node->eval_type_ = Symbol::relop(node->get_child(0), node->get_child(1));
+        node->eval_type_ = Symbol::relop(node->get_child(0), node->get_child(1), &listener_);
         node->promote_type_ = Symbol::kNull;
         cout << "type" << node->eval_type_;
     }
@@ -273,7 +284,7 @@ void PrintVisitor::PrintVisitor::print_arith(AST *node)
             cout << ")";
         }
         
-        node->eval_type_ = Symbol::bop(node->get_child(0), node->get_child(1));
+        node->eval_type_ = Symbol::bop(node->get_child(0), node->get_child(1), &listener_);
         cout << "type" << node->eval_type_;
     }
 }

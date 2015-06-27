@@ -12,10 +12,11 @@ class AST {
 public:
     typedef std::shared_ptr<AST> ASTPtr;
 public:
-    AST() : eval_type_(Symbol::kUnknown), promote_type_(Symbol::kUnknown) { }
-    AST(const Token &tok) : token_(tok), eval_type_(Symbol::kUnknown), promote_type_(Symbol::kUnknown) { }
+    AST() : eval_type_(Symbol::kUnknown), promote_type_(Symbol::kNull) { }
+    AST(const Token &tok) : token_(tok), eval_type_(Symbol::kUnknown), promote_type_(Symbol::kNull) { }
     int get_node_type() { return token_.type; }
     std::string get_node_text() { return token_.text; }
+    int get_node_line() { return token_.line; }
     void add_child(AST *p) { children_.push_back(ASTPtr(p)); }
     void add_child(const ASTPtr &p) { children_.push_back(p); }
     size_t children_size() { return children_.size(); }

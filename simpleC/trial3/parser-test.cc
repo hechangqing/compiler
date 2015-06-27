@@ -19,6 +19,7 @@ int main()
         PrintVisitor visitor(global);
         visitor.print(ast.get());
         cout << ast->to_str_tree() << endl;
+        visitor.get_errors(cout);
     } catch (logic_error &e) {
         cout << e.what() << endl;
     }

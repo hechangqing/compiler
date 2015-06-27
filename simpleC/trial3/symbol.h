@@ -2,8 +2,28 @@
 #define _SYMBOL_H
 
 #include <stdexcept>
+#include <iostream>
 #include <string>
 #include <vector>
+
+class Listener {
+public:
+    void error(const std::string &str) {
+        errors_.push_back(str);
+    }
+    void error(const char *p) {
+        errors_.push_back(std::string(p));
+    }
+    std::ostream &get_errors(std::ostream &out) {
+        for (std::vector<std::string>::const_iterator iter = errors_.begin();
+                iter != errors_.end(); iter++ ) {
+            out << *iter << "\n";
+        }
+        return out;
+    }
+private:
+    std::vector<std::string> errors_;
+};
 
 class AST;
 
@@ -15,13 +35,14 @@ public:
                    kFloat   = 2, 
                    kVoid    = 3,
                    kBoolean = 0} Type;
+    static const std::vector<std::vector<Type> > logic_result_type;
     static const std::vector<std::vector<Type> > arith_result_type;
     static const std::vector<std::vector<Type> > relation_result_type;
     static const std::vector<std::vector<Type> > equal_result_type;
     static const std::vector<std::vector<Type> > assign_result_type;
     static const std::vector<std::vector<Type> > promote_from_to;
     
-    static Type get_result_type(const std::vector<std::vector<Type> > &type_table, AST *a, AST *b);
+    static Type get_result_type(const std::vector<std::vector<Type> > &type_table, AST *a, AST *b, Listener *listener);
 public:
     Symbol(Type init_type = kUnknown) 
         : type(init_type) { }
@@ -54,12 +75,14 @@ public:
     }
     std::string to_str() const { return "<" + name + ", " + get_type(type) + ">"; }
 public:
-    static Type bop(AST *a, AST *b);
-    static Type relop(AST *a, AST *b);
-    static Type eqop(AST *a, AST *b);
-    static Type assignop(AST *a, AST *b);
+    static Type bop(AST *a, AST *b, Listener *listener);
+    static Type logicop(AST *a, AST *b, Listener *listener);
+    static Type relop(AST *a, AST *b, Listener *listener);
+    static Type eqop(AST *a, AST *b, Listener *listener);
+    static Type assignop(AST *a, AST *b, Listener *listener);
 public:
     std::string name;
     Type type;
 };
+
 #endif // _SYMBOL_H

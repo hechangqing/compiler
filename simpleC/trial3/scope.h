@@ -11,6 +11,7 @@ class dupdef_error : public std::logic_error {
 public:
     dupdef_error(const std::string &msg) : std::logic_error(msg) { }
 };
+
 class Scope {
 public:
     typedef std::shared_ptr<Scope> ScopePtr;

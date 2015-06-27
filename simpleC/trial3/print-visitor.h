@@ -17,6 +17,9 @@ public:
         : scope_(scope), current_scope_(scope) { }
     
     void print(AST *node, int indent = 0);
+    void get_errors(std::ostream &out) {
+        listener_.get_errors(out);
+    }
 private:
     void print_block(AST *node, int indent);
     void print_decls(AST *node, int indent);
@@ -36,6 +39,7 @@ private:
 private:
     Scope::ScopePtr scope_;
     Scope::ScopePtr current_scope_;
+    Listener listener_;
 };
 
 #endif // _PRINT_VISITOR_H

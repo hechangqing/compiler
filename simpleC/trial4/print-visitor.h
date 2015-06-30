@@ -13,14 +13,19 @@ public:
 
 class PrintVisitor {
 public:
-    PrintVisitor(const Scope::ScopePtr &scope)
+    PrintVisitor(const Scope::ScopePtr &scope = NULL)
         : scope_(scope), current_scope_(scope) { }
     
-    void print(AST *node, int indent = 0);
+    void visit(Scope::ScopePtr *scope, AST *node, int indent = 0);
+    
+    bool has_error() {
+        return listener_.has_error();
+    }
     void get_errors(std::ostream &out) {
         listener_.get_errors(out);
     }
 private:
+    void print(AST *node, int indent = 0);
     void print_block(AST *node, int indent);
     void print_decls(AST *node, int indent);
     void print_decl(AST *node, int indent);

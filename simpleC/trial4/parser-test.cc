@@ -10,15 +10,15 @@ typedef Scope::ScopePtr ScopePtr;
 int main()
 {
     try {
-        Lexer lexer(cin);
-        Parser parser(lexer);
+        //Lexer lexer(cin);
+        Parser parser(cin);
         parser.program();
         AST::ASTPtr ast = parser.get_ast();
         //cout << ast->to_str_tree() << endl;
         ScopePtr global(new Scope(NULL, "global"));
         PrintVisitor visitor(global);
-        visitor.print(ast.get());
-        //cout << ast->to_str_tree() << endl;
+        visitor.visit(&global, ast.get());
+        cout << ast->to_str_tree() << endl;
         visitor.get_errors(cout);
     } catch (logic_error &e) {
         cout << "catch logic_error:\n";

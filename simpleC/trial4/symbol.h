@@ -8,6 +8,9 @@
 
 class Listener {
 public:
+    bool has_error() {
+        return ! errors_.empty();
+    }
     void error(const std::string &str) {
         errors_.push_back(str);
     }

@@ -1,5 +1,5 @@
 GPPFLAG = -g -std=c++11
-testbin = lexer-test parser-test ast-test symbol-test
+testbin = lexer-test parser-test ast-test symbol-test value-test
 
 .PHONY: test all
 
@@ -10,6 +10,8 @@ test: $(testbin)
 	./parser-test < test3.c
 	valgrind ./ast-test
 	valgrind ./parser-test < test3.c
+value-test: value-test.cc value.h
+	g++ $(GPPFLAG) $< -o $@
 symbol-test: symbol-test.cc scope.o
 	g++ $(GPPFLAG) $< scope.o -o $@
 ast-test: ast-test.cc lexer.o ast.h

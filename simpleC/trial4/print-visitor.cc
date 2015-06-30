@@ -15,6 +15,13 @@ using std::find;
 
 typedef Scope::ScopePtr ScopePtr;
 
+void PrintVisitor::visit(ScopePtr *scope, AST *node, int indent)
+{
+    scope_ = *scope;
+    current_scope_ = *scope;
+    print(node, indent);
+}
+
 void PrintVisitor::print(AST *node, int indent)
 {
     if (node == NULL) {

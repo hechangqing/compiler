@@ -20,6 +20,17 @@ public:
     void run();
 private:
     ValuePtr exec(AST *t);
+    void block(AST *t);
+    void decls(AST *t);
+    void decl(AST *t);
+    void stmts(AST *t);
+    void assign(AST *t);
+    void ifstmt(AST *t);
+    void whilestmt(AST *t);
+    ValuePtr load(AST *t);
+    ValuePtr arith(AST *t);
+    ValuePtr unary(AST *t);
+    ValuePtr constant(AST *t);
 private:
     Parser parser_;
     ASTPtr ast_;

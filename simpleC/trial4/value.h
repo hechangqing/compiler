@@ -11,12 +11,23 @@ public:
 
 class IntValue : public Value {
 public:
+    typedef std::shared_ptr<IntValue> IntValuePtr;
+    int get() { return data; }
     int data;
 };
 
 class FloatValue : public Value {
 public:
+    typedef std::shared_ptr<FloatValue> FloatValuePtr;
     float data;
+    float get() { return data; }
+};
+
+class BoolValue : public Value {
+public:
+    typedef std::shared_ptr<BoolValue> BoolValuePtr;
+    bool get() { return data; };
+    bool data;
 };
 
 #endif // _VALUE_H

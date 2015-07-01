@@ -3,24 +3,28 @@
 
 #include "lexer.h"
 #include "parser.h"
+#include "print-visitor.h"
 #include "scope.h"
 #include "ast.h"
+#include "value.h"
+#include "memory-space.h"
 
 class Interpreter {
 public:
     typedef AST::ASTPtr ASTPtr;
     typedef Scope::ScopePtr ScopePtr;
+    typedef Value::ValuePtr ValuePtr;
     typedef MemorySpace::MemorySpacePtr MemorySpacePtr;
 public:
     Interpreter(std::istream &in);
     void run();
 private:
-    Value &exec(AST *t);
+    ValuePtr exec(AST *t);
 private:
     Parser parser_;
     ASTPtr ast_;
     ScopePtr global_scope_;
-    Analyser analyser_;
+    PrintVisitor analyser_;
     MemorySpacePtr global_space_;
     MemorySpacePtr current_space_;
 };

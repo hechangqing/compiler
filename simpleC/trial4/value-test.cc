@@ -4,13 +4,21 @@
 using std::cout;
 using std::endl;
 
+typedef Value::ValuePtr ValuePtr;
+typedef IntValue::IntValuePtr IntValuePtr;
+
 int main()
 {
-    Value *pv;
+    ValuePtr pv;
 
-    pv = new IntValue();
-    dynamic_cast<IntValue*>(pv)->data = 5;
-    cout << dynamic_cast<IntValue*>(pv)->data << endl;    
+    pv.reset(new IntValue());
     
+    if (typeid(*pv) == typeid(IntValue)) {
+        IntValue *piv = dynamic_cast<IntValue*>(pv.get());
+        piv->data = 100;
+        cout << piv->get() << endl; 
+    } else {
+        cout << "unknown type: " << typeid(*pv).name() << endl;
+    }
     return 0;
 }

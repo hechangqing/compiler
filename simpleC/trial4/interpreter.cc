@@ -1,5 +1,10 @@
 #include "interpreter.h"
 
+// for debug
+#include <iostream>
+using std::cout;
+using std::endl;
+
 Interpreter::Interpreter(std::istream &in)
     : parser_(in), ast_(NULL), global_scope_(new Scope(NULL, "global")),
       analyser_(NULL), global_space_(NULL), current_space_(NULL)
@@ -19,13 +24,13 @@ void Interpreter::run()
     analyser_.visit(&global_scope_, ast_.get());
 
     // debug
-    cout << ast->to_str_tree() << endl;
+    cout << ast_->to_str_tree() << endl;
 
-    if (has_error()) {
+    if (analyser_.has_error()) {
         analyser_.get_errors(std::cout);
         return;
     }
 
-    exec(ast_.get());
+    //exec(ast_.get());
 }
 

@@ -14,9 +14,12 @@ public:
     MemorySpace(const MemorySpacePtr &enclosing = MemorySpacePtr(), const std::string &name = "")
         : enclosing_space_(enclosing), name_(name) { }
 
-    void put(const std::string name, const ValuePtr &value);
-    ValuePtr get(const std::string name);
-
+    void put(const std::string &name, const ValuePtr &value);
+    ValuePtr get(const std::string &name);
+    bool have_name(const std::string &name) { 
+        return memory_.find(name) != memory_.end(); 
+    }
+    
     const std::string &get_name() { return name_; }
     const MemorySpacePtr &get_enclosing_space() { return enclosing_space_; }
 private:

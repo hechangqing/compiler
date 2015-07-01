@@ -7,7 +7,7 @@ void Scope::define(const Symbol &sym)
     if (symbol_table_.find(sym.name) == symbol_table_.end()) {
         symbol_table_[sym.name] = sym;
     } else {
-        throw dupdef_error("Scope: define: duplicate define symbol " 
+        throw dupdef_error("Scope: define(): duplicate define symbol " 
                 + sym.to_str() + "; already define "
                 + symbol_table_[sym.name].to_str());
     }

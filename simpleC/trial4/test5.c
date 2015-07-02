@@ -4,12 +4,12 @@
     int k;
     bool b;
     float f;
-    b = (1 || 2) && (true && false);
-    b = 3 < (5 + true);
+    b = (true && false);
+    b = 3 < (5 + 2);
     f = 3 + 5;
-    if (i) {} else {}
+    if (b) {} else {}
     {
         float i;
-        i = true;
+        i = 3.0;
     }
 }

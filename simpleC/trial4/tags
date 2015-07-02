@@ -10,7 +10,14 @@ AST	ast.h	/^class AST {$/;"	c
 ASTPtr	ast.h	/^    typedef std::shared_ptr<AST> ASTPtr;$/;"	t	class:AST
 ASTPtr	interpreter.h	/^    typedef AST::ASTPtr ASTPtr;$/;"	t	class:Interpreter
 ASTPtr	parser.cc	/^typedef AST::ASTPtr ASTPtr;$/;"	t	file:
+BoolValue	value.h	/^class BoolValue : public Value {$/;"	c
+BoolValuePtr	value.h	/^    typedef std::shared_ptr<BoolValue> BoolValuePtr;$/;"	t	class:BoolValue
+FloatValue	value.h	/^class FloatValue : public Value {$/;"	c
+FloatValuePtr	value.h	/^    typedef std::shared_ptr<FloatValue> FloatValuePtr;$/;"	t	class:FloatValue
 GPPFLAG	Makefile	/^GPPFLAG = -g -std=c++11$/;"	m
+IntValue	value.h	/^class IntValue : public Value {$/;"	c
+IntValuePtr	value-test.cc	/^typedef IntValue::IntValuePtr IntValuePtr;$/;"	t	file:
+IntValuePtr	value.h	/^    typedef std::shared_ptr<IntValue> IntValuePtr;$/;"	t	class:IntValue
 Interpreter	interpreter.cc	/^Interpreter::Interpreter(std::istream &in)$/;"	f	class:Interpreter
 Interpreter	interpreter.h	/^class Interpreter {$/;"	c
 LA	parser.cc	/^int Parser::LA(int i)$/;"	f	class:Parser
@@ -18,7 +25,10 @@ LT	parser.cc	/^const Token &Parser::LT(int i)$/;"	f	class:Parser
 Lexer	lexer.h	/^    Lexer(std::istream &in) : in_(in), p_(0), c_(' '), line_num_(0) { $/;"	f	class:Lexer
 Lexer	lexer.h	/^class Lexer {$/;"	c
 Listener	symbol.h	/^class Listener {$/;"	c
+MemorySpace	memory-space.h	/^    MemorySpace(const MemorySpacePtr &enclosing = MemorySpacePtr(), const std::string &name = "")$/;"	f	class:MemorySpace
+MemorySpace	memory-space.h	/^class MemorySpace {$/;"	c
 MemorySpacePtr	interpreter.h	/^    typedef MemorySpace::MemorySpacePtr MemorySpacePtr;$/;"	t	class:Interpreter
+MemorySpacePtr	memory-space.h	/^    typedef std::shared_ptr<MemorySpace> MemorySpacePtr;$/;"	t	class:MemorySpace
 Parser	parser.h	/^    Parser(const Lexer &lexer) : lexer_(lexer) { consume(); }$/;"	f	class:Parser
 Parser	parser.h	/^class Parser {$/;"	c
 PrintVisitor	print-visitor.h	/^    PrintVisitor(const Scope::ScopePtr &scope = NULL)$/;"	f	class:PrintVisitor
@@ -35,41 +45,58 @@ Symbol	symbol.h	/^    Symbol(const std::string &init_name, const std::string &in
 Symbol	symbol.h	/^class Symbol {$/;"	c
 Token	lexer.h	/^    Token(int t = -1, const std::string &str = "!!Unknown", int ln = 0)$/;"	f	class:Token
 Token	lexer.h	/^class Token {$/;"	c
-Type	symbol.h	/^                   kBoolean = 0} Type;$/;"	t	class:Symbol	typeref:enum:Symbol::__anon2
+Type	symbol.h	/^                   kBoolean = 0} Type;$/;"	t	class:Symbol	typeref:enum:Symbol::__anon1
+Value	value.h	/^class Value {$/;"	c
+ValuePtr	interpreter.h	/^    typedef Value::ValuePtr ValuePtr;$/;"	t	class:Interpreter
+ValuePtr	memory-space.h	/^    typedef Value::ValuePtr ValuePtr;$/;"	t	class:MemorySpace
+ValuePtr	value-test.cc	/^typedef Value::ValuePtr ValuePtr;$/;"	t	file:
+ValuePtr	value.h	/^    typedef std::shared_ptr<Value> ValuePtr;$/;"	t	class:Value
 _AST_H	ast.h	2;"	d
 _INTERPRETER_H	interpreter.h	2;"	d
 _LEXER_H	lexer.h	2;"	d
+_MEMORY_SPACE_H	memory-space.h	2;"	d
 _PARSER_H	parser.h	2;"	d
 _PRINT_VISITOR_H	print-visitor.h	2;"	d
 _SCOPE_H	scope.h	2;"	d
 _SYMBOL_H	symbol.h	2;"	d
 _UTILS_H	utils.h	2;"	d
+_VALUE_H	value.h	2;"	d
 add_child	ast.h	/^    void add_child(AST *p) { children_.push_back(ASTPtr(p)); }$/;"	f	class:AST
 add_child	ast.h	/^    void add_child(const ASTPtr &p) { children_.push_back(p); }$/;"	f	class:AST
-analyser_	interpreter.h	/^    Analyser analyser_;$/;"	m	class:Interpreter
+analyser_	interpreter.h	/^    PrintVisitor analyser_;$/;"	m	class:Interpreter
+arith	interpreter.cc	/^Interpreter::ValuePtr Interpreter::arith(AST *t)$/;"	f	class:Interpreter
 arith_result_type	symbol.cc	/^const vector<vector<Symbol::Type> > Symbol::arith_result_type = {$/;"	m	class:Symbol	file:
 arith_result_type	symbol.h	/^    static const std::vector<std::vector<Type> > arith_result_type;$/;"	m	class:Symbol
+assign	interpreter.cc	/^void Interpreter::assign(AST *t)$/;"	f	class:Interpreter
 assign_result_type	symbol.cc	/^const vector<vector<Symbol::Type> > Symbol::assign_result_type = {$/;"	m	class:Symbol	file:
 assign_result_type	symbol.h	/^    static const std::vector<std::vector<Type> > assign_result_type;$/;"	m	class:Symbol
 assignop	symbol.cc	/^Symbol::Type Symbol::assignop(AST *l, AST *r, Listener *listener)$/;"	f	class:Symbol
 ast_	interpreter.h	/^    ASTPtr ast_;$/;"	m	class:Interpreter
 ast_	parser.h	/^    AST::ASTPtr ast_;$/;"	m	class:Parser
+block	interpreter.cc	/^void Interpreter::block(AST *t)$/;"	f	class:Interpreter
 block	parser.cc	/^ASTPtr Parser::block()$/;"	f	class:Parser
 boolean	parser.cc	/^ASTPtr Parser::boolean()$/;"	f	class:Parser
 bop	symbol.cc	/^Symbol::Type Symbol::bop(AST *a, AST *b, Listener *listener)$/;"	f	class:Symbol
 c_	lexer.h	/^    char c_;                \/\/ lookahead char$/;"	m	class:Lexer
 children_	ast.h	/^    std::vector<ASTPtr> children_;$/;"	m	class:AST
 children_size	ast.h	/^    size_t children_size() { return children_.size(); }$/;"	f	class:AST
+constant	interpreter.cc	/^Interpreter::ValuePtr Interpreter::constant(AST *t)$/;"	f	class:Interpreter
 consume	lexer.cc	/^void Lexer::consume()$/;"	f	class:Lexer
 consume	parser.cc	/^void Parser::consume()$/;"	f	class:Parser
 current_scope_	print-visitor.h	/^    Scope::ScopePtr current_scope_;$/;"	m	class:PrintVisitor
 current_space_	interpreter.h	/^    MemorySpacePtr current_space_;$/;"	m	class:Interpreter
+data	value.h	/^    bool data;$/;"	m	class:BoolValue
+data	value.h	/^    float data;$/;"	m	class:FloatValue
+data	value.h	/^    int data;$/;"	m	class:IntValue
+decl	interpreter.cc	/^void Interpreter::decl(AST *t)$/;"	f	class:Interpreter
 decl	parser.cc	/^ASTPtr Parser::decl()$/;"	f	class:Parser
+decls	interpreter.cc	/^void Interpreter::decls(AST *t)$/;"	f	class:Interpreter
 decls	parser.cc	/^ASTPtr Parser::decls()$/;"	f	class:Parser
 define	scope.cc	/^void Scope::define(const Symbol &sym)$/;"	f	class:Scope
 dupdef_error	scope.h	/^    dupdef_error(const std::string &msg) : std::logic_error(msg) { }$/;"	f	class:dupdef_error
 dupdef_error	scope.h	/^class dupdef_error : public std::logic_error {$/;"	c
 enclosing_scope_	scope.h	/^    ScopePtr enclosing_scope_;$/;"	m	class:Scope
+enclosing_space_	memory-space.h	/^    MemorySpacePtr enclosing_space_;$/;"	m	class:MemorySpace
 eqop	symbol.cc	/^Symbol::Type Symbol::eqop(AST *a, AST *b, Listener *listener)$/;"	f	class:Symbol
 equal_result_type	symbol.cc	/^const vector<vector<Symbol::Type> > Symbol::equal_result_type = {$/;"	m	class:Symbol	file:
 equal_result_type	symbol.h	/^    static const std::vector<std::vector<Type> > equal_result_type;$/;"	m	class:Symbol
@@ -78,14 +105,21 @@ error	symbol.h	/^    void error(const char *p) {$/;"	f	class:Listener
 error	symbol.h	/^    void error(const std::string &str) {$/;"	f	class:Listener
 errors_	symbol.h	/^    std::vector<std::string> errors_;$/;"	m	class:Listener
 eval_type_	ast.h	/^    Symbol::Type eval_type_;$/;"	m	class:AST
+exec	interpreter.cc	/^Interpreter::ValuePtr Interpreter::exec(AST *t)$/;"	f	class:Interpreter
 expr	parser.cc	/^ASTPtr Parser::expr()$/;"	f	class:Parser
 factor	parser.cc	/^ASTPtr Parser::factor()$/;"	f	class:Parser
+get	memory-space.cc	/^Value::ValuePtr MemorySpace::get(const std::string &name) $/;"	f	class:MemorySpace
+get	value.h	/^    bool get() { return data; };$/;"	f	class:BoolValue
+get	value.h	/^    float get() { return data; }$/;"	f	class:FloatValue
+get	value.h	/^    int get() { return data; }$/;"	f	class:IntValue
 get_ast	parser.cc	/^ASTPtr Parser::get_ast()$/;"	f	class:Parser
 get_child	ast.h	/^    AST *get_child(size_t i) { $/;"	f	class:AST
 get_enclosing_scope	scope.h	/^    const ScopePtr &get_enclosing_scope() { return enclosing_scope_; }$/;"	f	class:Scope
+get_enclosing_space	memory-space.h	/^    const MemorySpacePtr &get_enclosing_space() { return enclosing_space_; }$/;"	f	class:MemorySpace
 get_errors	print-visitor.h	/^    void get_errors(std::ostream &out) {$/;"	f	class:PrintVisitor
 get_errors	symbol.h	/^    std::ostream &get_errors(std::ostream &out) {$/;"	f	class:Listener
 get_line_num	lexer.h	/^    size_t get_line_num() const { return line_num_; }$/;"	f	class:Lexer
+get_name	memory-space.h	/^    const std::string &get_name() { return name_; }$/;"	f	class:MemorySpace
 get_node_line	ast.h	/^    int get_node_line() { return token_.line; }$/;"	f	class:AST
 get_node_text	ast.h	/^    std::string get_node_text() { return token_.text; }$/;"	f	class:AST
 get_node_type	ast.h	/^    int get_node_type() { return token_.type; }$/;"	f	class:AST
@@ -95,52 +129,63 @@ get_token_name	lexer.cc	/^std::string Lexer::get_token_name(int i)$/;"	f	class:L
 get_type	symbol.h	/^    static std::string get_type(Type x) {$/;"	f	class:Symbol
 global_scope_	interpreter.h	/^    ScopePtr global_scope_;$/;"	m	class:Interpreter
 global_space_	interpreter.h	/^    MemorySpacePtr global_space_;$/;"	m	class:Interpreter
+has_error	print-visitor.h	/^    bool has_error() {$/;"	f	class:PrintVisitor
+has_error	symbol.h	/^    bool has_error() {$/;"	f	class:Listener
+have_name	memory-space.h	/^    bool have_name(const std::string &name) { $/;"	f	class:MemorySpace
 i	test.c	/^int i;$/;"	v
+ifstmt	interpreter.cc	/^void Interpreter::ifstmt(AST *t)$/;"	f	class:Interpreter
 in_	lexer.h	/^    std::istream &in_;$/;"	m	class:Lexer
 is_float	print-visitor.cc	/^static bool is_float(const std::string &s)$/;"	f	file:
 join	parser.cc	/^ASTPtr Parser::join()$/;"	f	class:Parser
-kAnd	lexer.h	/^           kAnd = 0x100, \/\/ begin from 256 to prevent from conflicing with$/;"	e	enum:Lexer::__anon1
-kBasic	lexer.h	/^           kBasic,$/;"	e	enum:Lexer::__anon1
-kBoolean	symbol.h	/^                   kBoolean = 0} Type;$/;"	e	enum:Symbol::__anon2
-kBreak	lexer.h	/^           kBreak,$/;"	e	enum:Lexer::__anon1
-kEOF	lexer.h	/^    enum { kEOF = -1,$/;"	e	enum:Lexer::__anon1
-kElse	lexer.h	/^           kElse,$/;"	e	enum:Lexer::__anon1
-kEqual	lexer.h	/^           kEqual,$/;"	e	enum:Lexer::__anon1
-kFalse	lexer.h	/^           kFalse,$/;"	e	enum:Lexer::__anon1
-kFloat	symbol.h	/^                   kFloat   = 2, $/;"	e	enum:Symbol::__anon2
-kGreaterEqual	lexer.h	/^           kGreaterEqual,$/;"	e	enum:Lexer::__anon1
-kID	lexer.h	/^           kID,$/;"	e	enum:Lexer::__anon1
-kIf	lexer.h	/^           kIf,$/;"	e	enum:Lexer::__anon1
-kInt	symbol.h	/^                   kInt     = 1, $/;"	e	enum:Symbol::__anon2
-kLessEqual	lexer.h	/^           kLessEqual,$/;"	e	enum:Lexer::__anon1
-kNotEqual	lexer.h	/^           kNotEqual,$/;"	e	enum:Lexer::__anon1
-kNull	symbol.h	/^                   kNull    = 11,$/;"	e	enum:Symbol::__anon2
-kNum	lexer.h	/^           kNum,$/;"	e	enum:Lexer::__anon1
-kOr	lexer.h	/^           kOr,          \/\/ printable characters$/;"	e	enum:Lexer::__anon1
-kTrue	lexer.h	/^           kTrue,$/;"	e	enum:Lexer::__anon1
-kUnknown	symbol.h	/^    typedef enum { kUnknown = 10,$/;"	e	enum:Symbol::__anon2
-kVoid	symbol.h	/^                   kVoid    = 3,$/;"	e	enum:Symbol::__anon2
-kWhile	lexer.h	/^           kWhile,$/;"	e	enum:Lexer::__anon1
+kAnd	lexer.h	/^           kAnd = 0x100, \/\/ begin from 256 to prevent from conflicing with$/;"	e	enum:Lexer::__anon2
+kBasic	lexer.h	/^           kBasic,$/;"	e	enum:Lexer::__anon2
+kBoolean	symbol.h	/^                   kBoolean = 0} Type;$/;"	e	enum:Symbol::__anon1
+kBreak	lexer.h	/^           kBreak,$/;"	e	enum:Lexer::__anon2
+kEOF	lexer.h	/^    enum { kEOF = -1,$/;"	e	enum:Lexer::__anon2
+kElse	lexer.h	/^           kElse,$/;"	e	enum:Lexer::__anon2
+kEqual	lexer.h	/^           kEqual,$/;"	e	enum:Lexer::__anon2
+kFalse	lexer.h	/^           kFalse,$/;"	e	enum:Lexer::__anon2
+kFloat	symbol.h	/^                   kFloat   = 2, $/;"	e	enum:Symbol::__anon1
+kGreaterEqual	lexer.h	/^           kGreaterEqual,$/;"	e	enum:Lexer::__anon2
+kID	lexer.h	/^           kID,$/;"	e	enum:Lexer::__anon2
+kIf	lexer.h	/^           kIf,$/;"	e	enum:Lexer::__anon2
+kInt	symbol.h	/^                   kInt     = 1, $/;"	e	enum:Symbol::__anon1
+kLessEqual	lexer.h	/^           kLessEqual,$/;"	e	enum:Lexer::__anon2
+kNotEqual	lexer.h	/^           kNotEqual,$/;"	e	enum:Lexer::__anon2
+kNull	symbol.h	/^                   kNull    = 11,$/;"	e	enum:Symbol::__anon1
+kNum	lexer.h	/^           kNum,$/;"	e	enum:Lexer::__anon2
+kOr	lexer.h	/^           kOr,          \/\/ printable characters$/;"	e	enum:Lexer::__anon2
+kTrue	lexer.h	/^           kTrue,$/;"	e	enum:Lexer::__anon2
+kUnknown	symbol.h	/^    typedef enum { kUnknown = 10,$/;"	e	enum:Symbol::__anon1
+kVoid	symbol.h	/^                   kVoid    = 3,$/;"	e	enum:Symbol::__anon1
+kWhile	lexer.h	/^           kWhile,$/;"	e	enum:Lexer::__anon2
 lexer_	parser.h	/^    Lexer lexer_;$/;"	m	class:Parser
 line	lexer.h	/^    int         line;$/;"	m	class:Token
 line_	lexer.h	/^    std::string line_;      \/\/ lookahead line$/;"	m	class:Lexer
 line_num_	lexer.h	/^    size_t line_num_;       \/\/ current line number in instream$/;"	m	class:Lexer
 listener_	print-visitor.h	/^    Listener listener_;$/;"	m	class:PrintVisitor
+load	interpreter.cc	/^Interpreter::ValuePtr Interpreter::load(AST *t)$/;"	f	class:Interpreter
 loc	parser.cc	/^ASTPtr Parser::loc()$/;"	f	class:Parser
 logic_result_type	symbol.cc	/^const vector<vector<Symbol::Type> > Symbol::logic_result_type = {$/;"	m	class:Symbol	file:
 logic_result_type	symbol.h	/^    static const std::vector<std::vector<Type> > logic_result_type;$/;"	m	class:Symbol
 logicop	symbol.cc	/^Symbol::Type Symbol::logicop(AST *a, AST *b, Listener *listener)$/;"	f	class:Symbol
 lookahead_	parser.h	/^    Token lookahead_;$/;"	m	class:Parser
 main	ast-test.cc	/^int main()$/;"	f
+main	interpreter-test.cc	/^int main()$/;"	f
 main	lexer-test.cc	/^int main()$/;"	f
 main	parser-test.cc	/^int main()$/;"	f
 main	symbol-test.cc	/^int main()$/;"	f
+main	value-test.cc	/^int main()$/;"	f
+make_value	utils.cc	/^Value *make_value(const std::string &type)$/;"	f
 match	parser.cc	/^void Parser::match(int x)$/;"	f	class:Parser
 match_error	parser.h	/^    match_error(const std::string &str) : std::logic_error(str) { }$/;"	f	class:match_error
 match_error	parser.h	/^class match_error: public std::logic_error {$/;"	c
+memory_	memory-space.h	/^    std::map<std::string, ValuePtr> memory_;$/;"	m	class:MemorySpace
 name	symbol.h	/^    std::string name;$/;"	m	class:Symbol
+name_	memory-space.h	/^    std::string name_;$/;"	m	class:MemorySpace
 name_	scope.h	/^    std::string name_;$/;"	m	class:Scope
 next_token	lexer.cc	/^int Lexer::next_token(Token *tok)$/;"	f	class:Lexer
+objs	Makefile	/^objs = memory-space.o$/;"	m
 p_	lexer.h	/^    size_t p_;              \/\/ the index of string(line_) to read$/;"	m	class:Lexer
 parser_	interpreter.h	/^    Parser parser_;$/;"	m	class:Interpreter
 print	print-visitor.cc	/^void PrintVisitor::print(AST *node, int indent)$/;"	f	class:PrintVisitor
@@ -163,6 +208,7 @@ program	parser.cc	/^void Parser::program()$/;"	f	class:Parser
 promote_from_to	symbol.cc	/^const vector<vector<Symbol::Type> > Symbol::promote_from_to = {$/;"	m	class:Symbol	file:
 promote_from_to	symbol.h	/^    static const std::vector<std::vector<Type> > promote_from_to;$/;"	m	class:Symbol
 promote_type_	ast.h	/^    Symbol::Type promote_type_;$/;"	m	class:AST
+put	memory-space.cc	/^void MemorySpace::put(const string &name, const ValuePtr &value)$/;"	f	class:MemorySpace
 recognition_error	parser.h	/^    recognition_error(const std::string &str) : std::logic_error(str) { }$/;"	f	class:recognition_error
 recognition_error	parser.h	/^class recognition_error: public std::logic_error {$/;"	c
 rel	parser.cc	/^ASTPtr Parser::rel()$/;"	f	class:Parser
@@ -174,15 +220,16 @@ run	interpreter.cc	/^void Interpreter::run()$/;"	f	class:Interpreter
 scope_	ast.h	/^    Scope::ScopePtr scope_;$/;"	m	class:AST
 scope_	print-visitor.h	/^    Scope::ScopePtr scope_;$/;"	m	class:PrintVisitor
 stmt	parser.cc	/^ASTPtr Parser::stmt()$/;"	f	class:Parser
+stmts	interpreter.cc	/^void Interpreter::stmts(AST *t)$/;"	f	class:Interpreter
 stmts	parser.cc	/^ASTPtr Parser::stmts()$/;"	f	class:Parser
 stmts_first_set_	parser.cc	/^const int Parser::stmts_first_set_[] = {$/;"	m	class:Parser	file:
 stmts_first_set_	parser.h	/^    static const int stmts_first_set_[];$/;"	m	class:Parser
 str	utils.h	/^std::string str(T t)$/;"	f
-str_to_type	symbol.h	/^    Type str_to_type(const std::string &x) const {$/;"	f	class:Symbol
+str_to_type	symbol.h	/^    static Type str_to_type(const std::string &x) {$/;"	f	class:Symbol
 symbol_	ast.h	/^    Symbol symbol_;$/;"	m	class:AST
 symbol_table_	scope.h	/^    std::map<std::string, Symbol> symbol_table_;$/;"	m	class:Scope
 term	parser.cc	/^ASTPtr Parser::term()$/;"	f	class:Parser
-testbin	Makefile	/^testbin = lexer-test parser-test ast-test symbol-test$/;"	m
+testbin	Makefile	/^testbin = lexer-test parser-test ast-test symbol-test value-test\\$/;"	m
 text	lexer.h	/^    std::string text;$/;"	m	class:Token
 to_str	ast.h	/^    std::string to_str(int indent = 0) { $/;"	f	class:AST
 to_str	symbol.h	/^    std::string to_str() const { return "<" + name + ", " + get_type(type) + ">"; }$/;"	f	class:Symbol
@@ -194,14 +241,19 @@ type	parser.cc	/^ASTPtr Parser::type()$/;"	f	class:Parser
 type	symbol.h	/^    Type type;$/;"	m	class:Symbol
 types_	lexer.cc	/^const string Lexer::types_[] = { "int", "float", "bool" };$/;"	m	class:Lexer	file:
 types_	lexer.h	/^    const static std::string types_[]; \/\/ data types of target language$/;"	m	class:Lexer
+unary	interpreter.cc	/^Interpreter::ValuePtr Interpreter::unary(AST *t)$/;"	f	class:Interpreter
 unary	parser.cc	/^ASTPtr Parser::unary()$/;"	f	class:Parser
+undef_error	scope.h	/^    undef_error(const std::string &msg) : logic_error(msg) { }$/;"	f	class:undef_error
+undef_error	scope.h	/^class undef_error : public std::logic_error {$/;"	c
 undefine_symbol_error	print-visitor.h	/^    undefine_symbol_error(const std::string &s) $/;"	f	class:undefine_symbol_error
 undefine_symbol_error	print-visitor.h	/^class undefine_symbol_error : public std::logic_error {$/;"	c
-vBlock	lexer.h	/^           vBlock,$/;"	e	enum:Lexer::__anon1
-vDecl	lexer.h	/^           vDecl,$/;"	e	enum:Lexer::__anon1
-vDecls	lexer.h	/^           vDecls,$/;"	e	enum:Lexer::__anon1
-vStmts	lexer.h	/^           vStmts,$/;"	e	enum:Lexer::__anon1
-vUnaryMinus	lexer.h	/^           vUnaryMinus };$/;"	e	enum:Lexer::__anon1
-vUnaryNot	lexer.h	/^           vUnaryNot,$/;"	e	enum:Lexer::__anon1
+vBlock	lexer.h	/^           vBlock,$/;"	e	enum:Lexer::__anon2
+vDecl	lexer.h	/^           vDecl,$/;"	e	enum:Lexer::__anon2
+vDecls	lexer.h	/^           vDecls,$/;"	e	enum:Lexer::__anon2
+vStmts	lexer.h	/^           vStmts,$/;"	e	enum:Lexer::__anon2
+vUnaryMinus	lexer.h	/^           vUnaryMinus };$/;"	e	enum:Lexer::__anon2
+vUnaryNot	lexer.h	/^           vUnaryNot,$/;"	e	enum:Lexer::__anon2
 visit	print-visitor.cc	/^void PrintVisitor::visit(ScopePtr *scope, AST *node, int indent)$/;"	f	class:PrintVisitor
+whilestmt	interpreter.cc	/^void Interpreter::whilestmt(AST *t)$/;"	f	class:Interpreter
 x	test.c	/^float x;$/;"	v
+~Value	value.h	/^    virtual ~Value() { };$/;"	f	class:Value

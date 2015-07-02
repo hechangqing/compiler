@@ -53,7 +53,7 @@ public:
         : name(init_name), type(str_to_type(init_type)) { }
     Symbol(const std::string &init_name, Type init_type = kUnknown)
         : name(init_name), type(init_type) { }
-    Type str_to_type(const std::string &x) const {
+    static Type str_to_type(const std::string &x) {
         if (x == "int") {
             return kInt;
         } else if (x == "float") {

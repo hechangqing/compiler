@@ -12,8 +12,8 @@ test: $(testbin)
 	./parser-test < test3.c
 	valgrind ./ast-test
 	valgrind ./parser-test < test3.c
-interpreter-test: interpreter-test.cc interpreter.o scope.o lexer.o parser.o symbol.o print-visitor.o
-	g++ $(GPPFLAG) $< -o $@ interpreter.o scope.o lexer.o symbol.o parser.o print-visitor.o
+interpreter-test: interpreter-test.cc interpreter.o scope.o lexer.o parser.o symbol.o print-visitor.o utils.o memory-space.o
+	g++ $(GPPFLAG) $< -o $@ interpreter.o scope.o lexer.o symbol.o parser.o print-visitor.o utils.o memory-space.o
 value-test: value-test.cc value.h
 	g++ $(GPPFLAG) $< -o $@
 symbol-test: symbol-test.cc scope.o
@@ -25,6 +25,8 @@ parser-test: parser-test.cc parser.o lexer.o print-visitor.o scope.o symbol.o
 interpreter.o: interpreter.cc interpreter.h
 	g++ $(GPPFLAG) -c $< -o $@
 memory-space.o: memory-space.cc memory-space.h
+	g++ $(GPPFLAG) -c $< -o $@
+utils.o: utils.cc utils.h
 	g++ $(GPPFLAG) -c $< -o $@
 symbol.o: symbol.cc symbol.h
 	g++ $(GPPFLAG) -c $< -o $@

@@ -1,4 +1,5 @@
 #include "interpreter.h"
+#include "utils.h"
 #include <stdexcept>
 
 // for debug
@@ -33,7 +34,7 @@ void Interpreter::run()
         return;
     }
 
-    //exec(ast_.get());
+    exec(ast_.get());
 }
 
 Interpreter::ValuePtr Interpreter::exec(AST *t)
@@ -73,3 +74,79 @@ Interpreter::ValuePtr Interpreter::exec(AST *t)
     }
     return ValuePtr();
 }
+
+void Interpreter::block(AST *t)
+{
+    if (!t) {
+        return;
+    }
+    // local space
+    MemorySpacePtr local(new MemorySpace(current_space_, "local"));
+    current_space_ = local;
+    
+    exec(t->get_child(0)); // declations
+    exec(t->get_child(1)); // statements
+    
+    // release local space
+    current_space_ = local->get_enclosing_space();
+}
+
+void Interpreter::decls(AST *t)
+{
+    if (!t) {
+        return;
+    }
+    size_t n = t->children_size();
+    for (size_t i = 0; i != n; i++) {
+        // declaration
+        exec(t->get_child(i));
+    }
+}
+
+void Interpreter::decl(AST *t)
+{
+    if (!t) {
+        return;
+    }
+    AST *type = t->get_child(0);
+    AST *id = t->get_child(1);
+    current_space_->put(id->get_node_text(),
+                ValuePtr(make_value(type->get_node_text())));
+}
+
+void Interpreter::stmts(AST *t)
+{
+}
+
+void Interpreter::assign(AST *t)
+{
+}
+
+void Interpreter::ifstmt(AST *t)
+{
+}
+
+void Interpreter::whilestmt(AST *t)
+{
+}
+
+Interpreter::ValuePtr Interpreter::load(AST *t)
+{
+    return ValuePtr();
+}
+
+Interpreter::ValuePtr Interpreter::arith(AST *t)
+{
+    return ValuePtr();
+}
+
+Interpreter::ValuePtr Interpreter::unary(AST *t)
+{
+    return ValuePtr();
+}
+
+Interpreter::ValuePtr Interpreter::constant(AST *t)
+{
+    return ValuePtr();
+}
+

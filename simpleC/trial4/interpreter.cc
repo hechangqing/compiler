@@ -110,16 +110,29 @@ void Interpreter::decl(AST *t)
     }
     AST *type = t->get_child(0);
     AST *id = t->get_child(1);
-    current_space_->put(id->get_node_text(),
+    current_space_->define(id->get_node_text(),
                 ValuePtr(make_value(type->get_node_text())));
 }
 
 void Interpreter::stmts(AST *t)
 {
+    if (!t) {
+        return;
+    }
+    size_t n = t->children_size();
+    for (size_t i = 0; i != n; i++) {
+        exec(t->get_child(i));
+    }
 }
 
 void Interpreter::assign(AST *t)
 {
+    if (!t) {
+        return;
+    }
+    ValuePtr value = exec(t->get_child(1));
+    IntValue *int_value = dynamic_cast<IntValue *>(value.get());
+    cout << int_value->data << endl;
 }
 
 void Interpreter::ifstmt(AST *t)
@@ -147,6 +160,9 @@ Interpreter::ValuePtr Interpreter::unary(AST *t)
 
 Interpreter::ValuePtr Interpreter::constant(AST *t)
 {
+    switch (t->get_node_type()) {
+        case Lexer::kNum: return ValuePtr(new IntValue(atoi(t->get_node_text().c_str())));
+    }
     return ValuePtr();
 }
 

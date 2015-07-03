@@ -6,6 +6,19 @@ using std::map;
 
 void MemorySpace::put(const string &name, const ValuePtr &value)
 {
+    MemorySpacePtr space(this);
+    while (space != NULL && ! space->have_name(name)) {
+        space = space->get_enclosing_space();
+    }
+    if (space != NULL) {
+        space->memory_[name] = value;
+    } else {
+        throw std::logic_error("MemorySpace: put(): can not find name " + name);
+    }
+}
+
+void MemorySpace::define(const string &name, const ValuePtr &value)
+{
 //    if (memory_.find(name) == memory_.end()) {
         memory_[name] = value;
 //    } else {

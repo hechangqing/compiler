@@ -14,6 +14,9 @@ public:
     typedef AST::ASTPtr ASTPtr;
     typedef Scope::ScopePtr ScopePtr;
     typedef Value::ValuePtr ValuePtr;
+    typedef IntValue::IntValuePtr IntValuePtr;
+    typedef FloatValue::FloatValuePtr FloatValuePtr;
+    typedef BoolValue::BoolValuePtr BoolValuePtr;
     typedef MemorySpace::MemorySpacePtr MemorySpacePtr;
 public:
     Interpreter(std::istream &in);

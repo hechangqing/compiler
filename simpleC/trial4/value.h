@@ -12,6 +12,7 @@ public:
 class IntValue : public Value {
 public:
     typedef std::shared_ptr<IntValue> IntValuePtr;
+    IntValue(int i = 0) : data(i) { }
     int get() { return data; }
     int data;
 };
